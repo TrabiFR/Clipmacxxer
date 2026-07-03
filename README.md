@@ -26,9 +26,16 @@ check what you're running, and building it yourself is two commands.)
 **Manual install** — grab `Clipmacxxer.dmg` from the latest
 [GitHub release](../../releases/latest), open it, and drag the app to
 Applications (a plain `Clipmacxxer.zip` is there too). The first launch
-needs one extra step: macOS will say it "could not verify" the app —
-open **System Settings → Privacy & Security**, scroll down, and click
-**Open Anyway**. After that it launches normally.
+needs one extra step because the build isn't notarized. macOS shows
+*"Apple could not verify Clipmacxxer is free of malware"* with only
+**Done** and **Move to Bin** as choices:
+
+1. Click **Done** — *not* Move to Bin.
+2. Open **System Settings → Privacy & Security** and scroll to the
+   bottom — it says Clipmacxxer was blocked.
+3. Click **Open Anyway** and confirm.
+
+That's once per Mac; afterwards it opens like any other app.
 
 ## Build & run
 
