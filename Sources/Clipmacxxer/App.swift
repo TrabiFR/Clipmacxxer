@@ -20,18 +20,15 @@ struct ClipmacxxerApp: App {
 final class AppDelegate: NSObject, NSApplicationDelegate {
     private var mainWindow: NSWindow?
 
-    func applicationDidFinishLaunching(_ notification: Notification) {
-        showMainWindow()
-    }
-
-    // Clicking the Dock icon opens the clip window — same content as the
-    // menu bar popover, for when the menu bar icon is hard to reach.
+    // The app is menu-bar-only (LSUIElement), so there is no Dock icon.
+    // The clip window opens from the popover's window button, or by
+    // launching the app again while it is running.
     func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool {
         showMainWindow()
         return true
     }
 
-    private func showMainWindow() {
+    func showMainWindow() {
         if let mainWindow {
             NSApp.activate(ignoringOtherApps: true)
             mainWindow.makeKeyAndOrderFront(nil)

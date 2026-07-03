@@ -137,6 +137,13 @@ struct MenuView: View {
                         .foregroundStyle(.secondary)
                 }
                 Spacer()
+                Button {
+                    (NSApp.delegate as? AppDelegate)?.showMainWindow()
+                } label: {
+                    Image(systemName: "macwindow")
+                }
+                .buttonStyle(.borderless)
+                .help("Open as a window")
                 Button("Quit") {
                     NSApp.terminate(nil)
                 }
