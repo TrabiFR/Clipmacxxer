@@ -1,3 +1,5 @@
+<p align="center"><img src="assets/logo.png" width="128" alt="Clipmacxxer logo"></p>
+
 # Clipmacxxer
 
 A macOS menu bar instant-replay tool. It keeps a rolling buffer of your screen
@@ -7,12 +9,26 @@ is written to disk until you explicitly click Save on a clip.
 
 ## Download
 
-Grab `Clipmacxxer.zip` from the latest
+**Quick install** — paste this in Terminal; it downloads the latest
+release, installs it to Applications, and launches it:
+
+```sh
+curl -fsSL https://github.com/TrabiFR/Clipmacxxer/releases/latest/download/Clipmacxxer.zip -o /tmp/Clipmacxxer.zip \
+  && ditto -x -k /tmp/Clipmacxxer.zip /Applications \
+  && xattr -dr com.apple.quarantine /Applications/Clipmacxxer.app \
+  && open /Applications/Clipmacxxer.app
+```
+
+(The `xattr` step clears macOS's download quarantine — needed because
+this build isn't notarized. The full source is right here if you want to
+check what you're running, and building it yourself is two commands.)
+
+**Manual install** — grab `Clipmacxxer.zip` from the latest
 [GitHub release](../../releases/latest), unzip, and drag the app to
-Applications. The build is not notarized, so the first launch needs one
-extra step: macOS will say it "could not verify" the app — open
-**System Settings → Privacy & Security**, scroll down, and click
-**Open Anyway**. After that it launches normally.
+Applications. The first launch needs one extra step: macOS will say it
+"could not verify" the app — open **System Settings → Privacy &
+Security**, scroll down, and click **Open Anyway**. After that it
+launches normally.
 
 ## Build & run
 
@@ -44,8 +60,9 @@ Certificates → + → Apple Development); the script picks it up automatically.
 
 ### App icon
 
-Drop your logo at `assets/logo.png` (1024×1024 PNG) and re-run
-`./build_app.sh` — it gets converted to the app icon automatically.
+The CM logo (`assets/logo.png`) ships as the app icon by default —
+`build_app.sh` converts it to `AppIcon.icns` automatically. To use a
+different icon, replace that file with your own 1024×1024 PNG and rebuild.
 
 ## Usage
 
