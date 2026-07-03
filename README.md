@@ -23,12 +23,12 @@ curl -fsSL https://github.com/TrabiFR/Clipmacxxer/releases/latest/download/Clipm
 this build isn't notarized. The full source is right here if you want to
 check what you're running, and building it yourself is two commands.)
 
-**Manual install** — grab `Clipmacxxer.zip` from the latest
-[GitHub release](../../releases/latest), unzip, and drag the app to
-Applications. The first launch needs one extra step: macOS will say it
-"could not verify" the app — open **System Settings → Privacy &
-Security**, scroll down, and click **Open Anyway**. After that it
-launches normally.
+**Manual install** — grab `Clipmacxxer.dmg` from the latest
+[GitHub release](../../releases/latest), open it, and drag the app to
+Applications (a plain `Clipmacxxer.zip` is there too). The first launch
+needs one extra step: macOS will say it "could not verify" the app —
+open **System Settings → Privacy & Security**, scroll down, and click
+**Open Anyway**. After that it launches normally.
 
 ## Build & run
 
