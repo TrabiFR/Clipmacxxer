@@ -88,7 +88,7 @@ different icon, replace that file with your own 1024×1024 PNG and rebuild.
   **Save** / **Show in Finder** (once saved), **Discard**.
 - Settings: clip length, hotkey, save folder, auto-save, quality
   (720p / 1080p / native), frame rate (30/60), system audio, microphone
-  (macOS 15+), memory cap (512 MB / 1 GB / 2 GB), save format (MOV/MP4),
+  (macOS 15+), memory cap (64 MB – 2 GB), save format (MOV/MP4),
   start-at-launch.
 
 ## How it stays in RAM (and under the cap)

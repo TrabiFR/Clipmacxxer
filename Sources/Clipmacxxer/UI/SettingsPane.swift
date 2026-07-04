@@ -59,6 +59,9 @@ struct SettingsPane: View {
                 }
                 section("Memory") {
                     Picker("Cap", selection: $app.settings.memoryCapMB) {
+                        Text("64 MB").tag(64)
+                        Text("128 MB").tag(128)
+                        Text("256 MB").tag(256)
                         Text("512 MB").tag(512)
                         Text("1 GB").tag(1024)
                         Text("2 GB").tag(2048)
