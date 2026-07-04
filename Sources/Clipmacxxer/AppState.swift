@@ -94,11 +94,25 @@ final class AppState: ObservableObject {
     // MARK: - Clips
 
     func captureClip() {
+        guard !capAlertShowing else {
+            NSSound.beep()
+            return
+        }
         guard let clip = engine.makeClip(length: settings.clipLength) else {
             statusMessage = "Nothing in the buffer yet."
             NSSound.beep()
             return
         }
+        // Check the hopeless case before evicting anything: even with every
+        // stored clip gone, the cap must hold the buffer plus this clip.
+        if bufferBytes + clip.byteSize > memoryCapBytes {
+            offerCapRaise(for: clip)
+            return
+        }
+        insertClip(clip)
+    }
+
+    private func insertClip(_ clip: Clip) {
         var projected = totalBytes + clip.byteSize
         var dropped = 0
         while projected > memoryCapBytes, let victim = evictionIndex() {
@@ -106,10 +120,6 @@ final class AppState: ObservableObject {
             playerWindows.closeIfOpen(clips[victim].id)
             clips.remove(at: victim)
             dropped += 1
-        }
-        if projected > memoryCapBytes {
-            statusMessage = "Clip too large for the memory cap — raise the cap or lower quality."
-            return
         }
         clips.insert(clip, at: 0)
         // Surface the clip list so the new clip is visible even if the
@@ -122,6 +132,43 @@ final class AppState: ObservableObject {
         if settings.autoSaveClips {
             save(clip)
         }
+    }
+
+    private var capAlertShowing = false
+
+    /// The clip can't fit even if every stored clip were evicted: offer to
+    /// raise the cap to the smallest preset that fits, or drop the clip.
+    private func offerCapRaise(for clip: Clip) {
+        let presets = [64, 128, 256, 512, 1024, 2048]
+        let neededBytes = bufferBytes + clip.byteSize
+        let fittingCap = presets.first { $0 * 1_048_576 >= neededBytes }
+
+        capAlertShowing = true
+        defer { capAlertShowing = false }
+        let alert = NSAlert()
+        alert.alertStyle = .warning
+        alert.messageText = "Not enough memory for this clip"
+        NSApp.activate(ignoringOtherApps: true)
+
+        if let cap = fittingCap, cap > settings.memoryCapMB {
+            alert.informativeText = "The clip is \(Format.bytes(clip.byteSize)), but the rolling buffer already fills most of the \(capLabel(settings.memoryCapMB)) cap. Raise the cap to \(capLabel(cap)) to keep this clip?"
+            alert.addButton(withTitle: "Raise to \(capLabel(cap)) & Keep")
+            alert.addButton(withTitle: "Discard Clip")
+            if alert.runModal() == .alertFirstButtonReturn {
+                settings.memoryCapMB = cap
+                insertClip(clip)
+            } else {
+                statusMessage = "Clip discarded — memory cap unchanged."
+            }
+        } else {
+            alert.informativeText = "The clip is \(Format.bytes(clip.byteSize)) and doesn't fit even at the largest cap. Lower the quality or clip length in Settings."
+            alert.addButton(withTitle: "OK")
+            alert.runModal()
+        }
+    }
+
+    private func capLabel(_ mb: Int) -> String {
+        mb >= 1024 ? "\(mb / 1024) GB" : "\(mb) MB"
     }
 
     /// Evict clips that already exist on disk before touching unsaved ones;
